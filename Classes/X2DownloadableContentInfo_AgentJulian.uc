@@ -170,8 +170,6 @@ static function AlterAbilitiesForHello()
 }
 static function AlterSquadArrays()
 {
-	local ConfigurableSquad squad;
-	local name soldierID;
 	local int i;
 
 	for(i = 0; i < class'UITacticalQuickLaunch_MapData'.default.Squads.Length; i++)
