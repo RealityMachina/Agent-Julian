@@ -15,33 +15,33 @@ class X2DownloadableContentInfo_AgentJulian extends X2DownloadableContentInfo;
 /// </summary>
 static event OnLoadedSavedGame()
 {	
-	local XComGameState NewGameState;
-	local XComGameState_HeadquartersDio DioHQ;
-	local XComGameState_Unit UnitState;
-	local int i;
-	local XComGameStateHistory History;
+	// local XComGameState NewGameState;
+	// local XComGameState_HeadquartersDio DioHQ;
+	// local XComGameState_Unit UnitState;
+	// local int i;
+	// local XComGameStateHistory History;
 
-	`log("XCOM JULIAN - saved game (one time only)");
-	DioHQ = class'UIUtilities_DioStrategy'.static.GetDioHQ();
-	History = `XCOMHISTORY;
-	for(i = 0; i < DioHQ.Squad.Length; i++)
-	{
-		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(DioHQ.Squad[i].ObjectID));
-		if(UnitState.GetSoldierClassTemplateName() == 'RM_JulianClass')
-		{
-			`log("XCOM JULIAN - already in HQ");
-			return; // don't do anything
-		}
-	}
-	// we get this far, there's no Julian at Chimera HQ
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("CHEAT: Fill Squad with All Agent Classes");
-	DioHQ = XComGameState_HeadquartersDio(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersDio', `DIOHQ.ObjectID));
+	// `log("XCOM JULIAN - saved game (one time only)");
+	// DioHQ = class'UIUtilities_DioStrategy'.static.GetDioHQ();
+	// History = `XCOMHISTORY;
+	// for(i = 0; i < DioHQ.Squad.Length; i++)
+	// {
+	// 	UnitState = XComGameState_Unit(History.GetGameStateForObjectID(DioHQ.Squad[i].ObjectID));
+	// 	if(UnitState.GetSoldierClassTemplateName() == 'RM_JulianClass')
+	// 	{
+	// 		`log("XCOM JULIAN - already in HQ");
+	// 		return; // don't do anything
+	// 	}
+	// }
+	// // we get this far, there's no Julian at Chimera HQ
+	// NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("CHEAT: Fill Squad with All Agent Classes");
+	// DioHQ = XComGameState_HeadquartersDio(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersDio', `DIOHQ.ObjectID));
 
 
-	DioHQ.CreateSquadUnit(NewGameState, 'CA_RM_Julian');
+	// DioHQ.CreateSquadUnit(NewGameState, 'CA_RM_Julian');
 	
 	
-	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);	
+	// `XCOMGAME.GameRuleset.SubmitGameState(NewGameState);	
 }
 
 /// <summary>
@@ -49,33 +49,7 @@ static event OnLoadedSavedGame()
 /// </summary>
 static event OnLoadedSavedGameToStrategy()
 {
-	local XComGameState NewGameState;
-	local XComGameState_HeadquartersDio DioHQ;
-	local XComGameState_Unit UnitState;
-	local int i;
-	local XComGameStateHistory History;
 
-	`log("XCOM JULIAN - saved game to strategy");
-	DioHQ = `DIOHQ;
-	History = `XCOMHISTORY;
-	for(i = 0; i < DioHQ.Squad.Length; i++)
-	{
-		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(DioHQ.Squad[i].ObjectID));
-		if(UnitState.GetSoldierClassTemplateName() == 'RM_JulianClass')
-		{
-			`log("XCOM JULIAN - already in HQ");
-			return; // don't do anything
-		}
-	}
-	// we get this far, there's no Julian at Chimera HQ
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("CHEAT: Fill Squad with All Agent Classes");
-	DioHQ = XComGameState_HeadquartersDio(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersDio', `DIOHQ.ObjectID));
-
-
-	DioHQ.CreateSquadUnit(NewGameState, 'CA_RM_Julian');
-	
-	
-	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
 
 /// <summary>
@@ -85,16 +59,16 @@ static event OnLoadedSavedGameToStrategy()
 /// </summary>
 static event InstallNewCampaign(XComGameState StartState)
 {
-	local XComGameState_HeadquartersDio DioHQ;
+	// local XComGameState_HeadquartersDio DioHQ;
 
-	// Retrieve the strategy inventory object
-	foreach StartState.IterateByClassType(class'XComGameState_HeadquartersDio', DioHQ)
-	{
-		break;
-	}	
+	// // Retrieve the strategy inventory object
+	// foreach StartState.IterateByClassType(class'XComGameState_HeadquartersDio', DioHQ)
+	// {
+	// 	break;
+	// }	
 
-	if(DioHQ != none)
-		DioHQ.CreateSquadUnit(StartState, 'CA_RM_Julian');
+	// if(DioHQ != none)
+	// 	DioHQ.CreateSquadUnit(StartState, 'CA_RM_Julian');
 	
 }
 
@@ -112,7 +86,7 @@ static event OnPreMission(XComGameState StartGameState, XComGameState_MissionSit
 /// </summary>
 static event OnPostMission()
 {
-	`log("XCOM JULIAN - onpostmission");
+
 }
 
 /// <summary>
@@ -129,33 +103,7 @@ static event ModifyTacticalTransferStartState(XComGameState TransferStartState)
 /// </summary>
 static event OnExitPostMissionSequence()
 {
-	local XComGameState NewGameState;
-	local XComGameState_HeadquartersDio DioHQ;
-	local XComGameState_Unit UnitState;
-	local int i;
-	local XComGameStateHistory History;
 
-	`log("XCOM JULIAN - exit post mission sequence");
-	DioHQ = `DIOHQ;
-	History = `XCOMHISTORY;
-	for(i = 0; i < DioHQ.Squad.Length; i++)
-	{
-		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(DioHQ.Squad[i].ObjectID));
-		if(UnitState.GetSoldierClassTemplateName() == 'RM_JulianClass')
-		{
-			`log("XCOM JULIAN - already in HQ");
-			return; // don't do anything
-		}
-	}
-	// we get this far, there's no Julian at Chimera HQ
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("CHEAT: Fill Squad with All Agent Classes");
-	DioHQ = XComGameState_HeadquartersDio(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersDio', `DIOHQ.ObjectID));
-
-
-	DioHQ.CreateSquadUnit(NewGameState, 'CA_RM_Julian');
-	
-	
-	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
 
 /// <summary>
@@ -224,19 +172,36 @@ static function AlterSquadArrays()
 {
 	local ConfigurableSquad squad;
 	local name soldierID;
+	local int i;
+
+	for(i = 0; i < class'UITacticalQuickLaunch_MapData'.default.Squads.Length; i++)
+	{
+		if(class'UITacticalQuickLaunch_MapData'.default.Squads[i].SquadID == 'DioPlayableCast' || 
+			class'UITacticalQuickLaunch_MapData'.default.Squads[i].SquadID == 'DioDebugStart')
+		{
+			class'UITacticalQuickLaunch_MapData'.default.Squads[i].SoldierIDs.additem('CA_RM_Julian');
+		}
+	}
+}
+
+exec function ShowSquadArrays()
+{
+	local ConfigurableSquad squad;
+	local name soldierID;
 	foreach class'UITacticalQuickLaunch_MapData'.default.Squads(squad)
 	{
 		if(squad.SquadID == 'DioPlayableCast' || squad.SquadID == 'DioDebugStart')
 		{
-			squad.SoldierIDs.additem('CA_RM_Julian');
-			`log("Our new array is: ");
+			`log("Our array " $ squad.SquadID $ " is: ");
 			foreach squad.SoldierIDs(soldierID)
 			{
 				`log(soldierID);
 			}
 		}
 	}
+
 }
+
 exec function AddJulianToHQ()
 {
 	local XComGameState NewGameState;
@@ -256,32 +221,32 @@ exec function AddJulianToHQ()
 /// </summary>
 static event OnDifficultyChanged()
 {
-	local XComGameState NewGameState;
-	local XComGameState_HeadquartersDio DioHQ;
-	local XComGameState_Unit UnitState;
-	local int i;
-	local XComGameStateHistory History;
+	// local XComGameState NewGameState;
+	// local XComGameState_HeadquartersDio DioHQ;
+	// local XComGameState_Unit UnitState;
+	// local int i;
+	// local XComGameStateHistory History;
 
-	DioHQ = `DIOHQ;
-	History = `XCOMHISTORY;
-	for(i = 0; i < DioHQ.Squad.Length; i++)
-	{
-		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(DioHQ.Squad[i].ObjectID));
-		if(UnitState.GetSoldierClassTemplateName() == 'RM_JulianClass')
-		{
-			`log("XCOM JULIAN - already in HQ");
-			return; // don't do anything
-		}
-	}
-	// we get this far, there's no Julian at Chimera HQ
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("CHEAT: Fill Squad with All Agent Classes");
-	DioHQ = XComGameState_HeadquartersDio(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersDio', `DIOHQ.ObjectID));
+	// DioHQ = `DIOHQ;
+	// History = `XCOMHISTORY;
+	// for(i = 0; i < DioHQ.Squad.Length; i++)
+	// {
+	// 	UnitState = XComGameState_Unit(History.GetGameStateForObjectID(DioHQ.Squad[i].ObjectID));
+	// 	if(UnitState.GetSoldierClassTemplateName() == 'RM_JulianClass')
+	// 	{
+	// 		`log("XCOM JULIAN - already in HQ");
+	// 		return; // don't do anything
+	// 	}
+	// }
+	// // we get this far, there's no Julian at Chimera HQ
+	// NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("CHEAT: Fill Squad with All Agent Classes");
+	// DioHQ = XComGameState_HeadquartersDio(NewGameState.ModifyStateObject(class'XComGameState_HeadquartersDio', `DIOHQ.ObjectID));
 
 
-	DioHQ.CreateSquadUnit(NewGameState, 'CA_RM_Julian');
+	// DioHQ.CreateSquadUnit(NewGameState, 'CA_RM_Julian');
 	
 	
-	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	// `XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
 
 /// <summary>
