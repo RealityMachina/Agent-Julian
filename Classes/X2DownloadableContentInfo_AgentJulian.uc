@@ -167,6 +167,9 @@ static function AlterAbilitiesForHello()
 	AbilityTemplate = AbilityManager.FindAbilityTemplate('SkirmisherStrike');
 	AbilityTemplate.bDontDisplayInAbilitySummary = true;
 
+	AbilityTemplate = AbilityManager.FindAbilityTemplate('SoulHarvester');
+	AbilityTemplate.bDontDisplayInAbilitySummary = true;	
+
 }
 static function AlterSquadArrays()
 {
