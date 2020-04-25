@@ -121,7 +121,7 @@ static function X2AbilityTemplate RM_LeadTheTargetShot()
 	StandardAim.bGuaranteedHit = true;
 	Template.AbilityToHitCalc = StandardAim;
 	Template.bDontDisplayInAbilitySummary = true;
-	
+
 	TargetEffectCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
 	TargetEffectCondition.AddRequireEffect(default.LeadTheTargetMarkEffectName, 'AA_MissingRequiredEffect');
 	Template.AbilityTargetConditions.AddItem(TargetEffectCondition);
