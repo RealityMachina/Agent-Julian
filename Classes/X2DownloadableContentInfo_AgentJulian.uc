@@ -216,6 +216,9 @@ static function AlterAbilitiesForHello()
 
 	}
 
+	AbilityTemplate = AbilityManager.FindAbilityTemplate('SkirmisherStrike');
+	AbilityTemplate.bDontDisplayInAbilitySummary = true;
+
 }
 static function AlterSquadArrays()
 {
