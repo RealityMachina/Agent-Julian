@@ -41,7 +41,6 @@ static function X2AbilityTemplate RM_LeadTheTarget()
 	Template.Hostility = eHostility_Neutral;
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
-	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bShowPostActivation = true;
 	Template.bSkipFireAction = true;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
@@ -81,9 +80,9 @@ static function X2AbilityTemplate RM_LeadTheTarget()
 
 	// Create effect to identify the SourceUnit and facilitate charge counting post-mission and to show a passive icon in the tactical UI
 	MarkEffect = new class'X2Effect_Persistent';
-	MarkEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
+	MarkEffect.BuildPersistentEffect(1, false, true, false, eWatchRule_UnitTurnEnd);
 	MarkEffect.EffectName = default.LeadTheTargetMarkEffectName;
-	MarkEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true,, Template.AbilitySourceName);
+	MarkEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true, , Template.AbilitySourceName);
 	Template.AddTargetEffect(MarkEffect);
 
 	Template.AdditionalAbilities.AddItem('RM_LeadTheTargetShot');
@@ -121,7 +120,8 @@ static function X2AbilityTemplate RM_LeadTheTargetShot()
 	StandardAim.bReactionFire = false;
 	StandardAim.bGuaranteedHit = true;
 	Template.AbilityToHitCalc = StandardAim;
-		
+	Template.bDontDisplayInAbilitySummary = true;
+	
 	TargetEffectCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
 	TargetEffectCondition.AddRequireEffect(default.LeadTheTargetMarkEffectName, 'AA_MissingRequiredEffect');
 	Template.AbilityTargetConditions.AddItem(TargetEffectCondition);

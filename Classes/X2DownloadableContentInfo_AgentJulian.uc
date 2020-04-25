@@ -312,6 +312,9 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	case 'JULIANREFLEXES':
 		OutString = string(class'X2Ability_JulianSet'.default.JULIAN_REFLEXES_BONUS);
 		return true;
+	case 'LEAD_TARGET_COOLDOWN':
+		OutString = string(class'X2Ability_JulianSet'.default.LEAD_TARGET_COOLDOWN);
+		return true;	
 	default:
 		return false;
 	}
