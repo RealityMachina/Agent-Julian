@@ -30,7 +30,6 @@ static function X2CharacterTemplate CreateJulianTemplate()
 
 	//CharTemplate.DefaultAppearance.nmVoiceSet.AddItem('AndroidFemale');
 	CharTemplate.DefaultAppearance.nmVoice = 'AndroidMale';
-
 	//`log("JULIAN AGENT: We are " $ CharTemplate.DataName);
 	return CharTemplate;
 }

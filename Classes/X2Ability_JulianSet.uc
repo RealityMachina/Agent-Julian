@@ -16,7 +16,20 @@ static function array<X2DataTemplate> CreateTemplates()
     Abilities.AddItem(CreateJulianKillConfirm());
 	Abilities.AddItem(RM_LeadTheTarget());
 	Abilities.AddItem(RM_LeadTheTargetShot());
+
+	Abilities.AddItem(RM_Banish());
     return Abilities;
+}
+static function X2AbilityTemplate RM_Banish()
+{
+	local X2AbilityTemplate                 Template;
+	Template = PurePassive('RM_JulianBanish', "img:///UILibrary_XPACK_Common.PerkIcons.UIPerk_soulreaper");
+	//Template.bBreachAbility = true;
+	Template.bFeatureInStartingSquadUnlock = true;
+	Template.bDontDisplayInAbilitySummary = true;
+    Template.AdditionalAbilities.AddItem('SoulReaper');
+	Template.AdditionalAbilities.AddItem('SoulHarvester');
+	return Template;
 }
 
 
