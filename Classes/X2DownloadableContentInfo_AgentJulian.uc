@@ -171,7 +171,7 @@ static function AlterAbilitiesForHello()
 {
 	local X2AbilityTemplateManager							AbilityManager;
 	local X2AbilityTemplate									AbilityTemplate;
-	local X2Effect_ApplyDirectionalWorldDamage						WorldDamage;
+	local X2Effect_HelloThereDamage						WorldDamage;
 	local X2Condition_HelloThere							HelloCondition;
 	local X2Condition_AbilityProperty						AbilityCondition;
 	local array<name>										AbilitiesToAlter;
@@ -194,7 +194,7 @@ static function AlterAbilitiesForHello()
 		AbilityTemplate = AbilityManager.FindAbilityTemplate(CurrentAbility);
 		if(AbilityTemplate != none)
 		{
-			WorldDamage = new class'X2Effect_ApplyDirectionalWorldDamage';
+			WorldDamage = new class'X2Effect_HelloThereDamage';
 			WorldDamage.bUseWeaponDamageType = true;
 			WorldDamage.bUseWeaponEnvironmentalDamage = false;
 			WorldDamage.EnvironmentalDamageAmount = 100;

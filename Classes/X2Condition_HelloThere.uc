@@ -11,10 +11,10 @@ function name CheckMeetsCondition( XComGameState_Ability kAbility, XComGameState
 		if( SourceWeapon != None )
 		{
            ClipSize = SourceWeapon.GetClipSize();
-			`log(SourceWeapon.GetMyTemplateName() $ " has the following ammo loaded into it " $ ClipSize);
+			//`log(SourceWeapon.GetMyTemplateName() $ " has the following ammo loaded into it " $ SourceWeapon.Ammo);
             if(SourceWeapon.Ammo < (ClipSize - 1)) // this means more than two shots were taken:
             {
-				`log("It is not enough for Hello There");
+			//	`log("It is not enough for Hello There");
                 // just for future me
                 // clipsize means we're taking our first shot
                 // clipsize - 1 means we're taking our second shot
