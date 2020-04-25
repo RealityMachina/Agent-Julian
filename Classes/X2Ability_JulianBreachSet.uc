@@ -71,7 +71,7 @@ static function X2AbilityTemplate AddBreachJulianAbility()
 	Template.bIgnoreArmorMitigation = true;
 
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
-	StandardAim.bIgnoreCoverBonus = true;
+//	StandardAim.bIgnoreCoverBonus = true;
 	Template.AbilityToHitCalc = StandardAim;
 	Template.AbilityToHitOwnerOnMissCalc = StandardAim;
 

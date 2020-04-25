@@ -136,7 +136,7 @@ static function AlterAbilitiesForHello()
 	AbilitiesToAlter.AddItem('RapidFire2');
 	AbilitiesToAlter.AddItem('HailOfBullets');	
 	AbilitiesToAlter.AddItem('OverwatchShot');
-
+	AbilitiesToAlter.AddItem('RM_LeadTheTargetShot');
 	foreach AbilitiesToAlter(CurrentAbility)
 	{
 		AbilityTemplate = AbilityManager.FindAbilityTemplate(CurrentAbility);
