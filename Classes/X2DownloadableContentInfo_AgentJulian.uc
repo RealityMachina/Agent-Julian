@@ -130,7 +130,7 @@ static function AlterAbilitiesForHello()
 
 	AbilitiesToAlter.AddItem('StandardShot');
 	AbilitiesToAlter.AddItem('Deadeye');
-	AbilitiesToAlter.AddItem('MovingFireShot');
+	//AbilitiesToAlter.AddItem('MovingFireShot');
 	AbilitiesToAlter.AddItem('KillZoneOverwatchShot');
 	AbilitiesToAlter.AddItem('RapidFire');
 	AbilitiesToAlter.AddItem('RapidFire2');

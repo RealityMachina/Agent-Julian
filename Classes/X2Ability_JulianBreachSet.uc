@@ -18,7 +18,7 @@ static function X2AbilityTemplate AddBreachJulianAbility()
 	local X2Condition_Visibility	VisibilityCondition;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
 	local X2Effect_ApplyDirectionalWorldDamage		WorldDamage;
-	//local X2AbilityCost_Ammo            AmmoCost;
+	local X2AbilityCost_Ammo            AmmoCost;
 
 	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('RM_BreachJulianAbility');
 	Template.BuildInterruptGameStateFn = None;
@@ -90,10 +90,10 @@ static function X2AbilityTemplate AddBreachJulianAbility()
 	WorldDamage.bAllowDestructionOfDamageCauseCover = true;
 	Template.AddTargetEffect(WorldDamage);
 
-	// Ammo Cost of Use
-	// AmmoCost = new class'X2AbilityCost_Ammo';
-	// AmmoCost.iAmmo = 3;
-	// Template.AbilityCosts.AddItem(AmmoCost);
+	 //Ammo Cost of Use
+	 AmmoCost = new class'X2AbilityCost_Ammo';
+	 AmmoCost.iAmmo = 1;
+	 Template.AbilityCosts.AddItem(AmmoCost);
 
 	Template.bRequireTargetDuringBreach = true;
 
