@@ -32,7 +32,7 @@ static function X2AbilityTemplate JulianReturnFire()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_JulianReturnFire                   FireEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'JulianReturnFire'');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'JulianReturnFire');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_returnfire";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -108,7 +108,7 @@ static function X2AbilityTemplate RM_Banish()
 
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
 	StandardAim.bAllowCrit = false;
-	StandardAim.BuiltInHitMod = default.BanishFirstShotAimMod;
+	StandardAim.BuiltInHitMod = class'X2Ability_ReaperAbilitySet'.default.BanishFirstShotAimMod;
 	Template.AbilityToHitCalc = StandardAim;
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 
@@ -170,7 +170,7 @@ static function X2AbilityTemplate RM_BanishContinue()
 
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
 	StandardAim.bAllowCrit = false;
-	StandardAim.BuiltInHitMod = default.BanishSubsequentShotsAimMod;
+	StandardAim.BuiltInHitMod = class'X2Ability_ReaperAbilitySet'.default.BanishSubsequentShotsAimMod;
 	Template.AbilityToHitCalc = StandardAim;
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 
