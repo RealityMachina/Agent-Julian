@@ -18,20 +18,269 @@ static function array<X2DataTemplate> CreateTemplates()
 	Abilities.AddItem(RM_LeadTheTargetShot());
 
 	Abilities.AddItem(RM_Banish());
+	Abilities.AddItem(RM_BanishContinue());
+
+	Abilities.AddItem(JulianReturnFire());
+
     return Abilities;
 }
+
+static function X2AbilityTemplate JulianReturnFire()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_JulianReturnFire                   FireEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'JulianReturnFire'');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_returnfire";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	FireEffect = new class'X2Effect_JulianReturnFire';
+	FireEffect.BuildPersistentEffect(1, true, false, false, eWatchRule_UnitTurnBegin);
+	FireEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(FireEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = false;       //  this can only work with pistols, which only sharpshooters have
+
+	return Template;
+}
+// static function X2AbilityTemplate RM_Banish()
+// {
+// 	local X2AbilityTemplate                 Template;
+// 	Template = PurePassive('RM_JulianBanish', "img:///UILibrary_XPACK_Common.PerkIcons.UIPerk_SoulHarvester");
+// 	//Template.bBreachAbility = true;
+// 	Template.bFeatureInStartingSquadUnlock = true;
+// 	//Template.bDontDisplayInAbilitySummary = true;
+//     Template.AdditionalAbilities.AddItem('SoulReaper');
+// 	Template.AdditionalAbilities.AddItem('SoulHarvester');
+// 	return Template;
+// }
+
+
 static function X2AbilityTemplate RM_Banish()
 {
-	local X2AbilityTemplate                 Template;
-	Template = PurePassive('RM_JulianBanish', "img:///UILibrary_XPACK_Common.PerkIcons.UIPerk_SoulHarvester");
-	//Template.bBreachAbility = true;
+	local X2AbilityTemplate					Template;
+	local X2AbilityCost_ActionPoints		ActionPointCost;
+	local X2AbilityCost_Ammo				AmmoCost;
+	local X2AbilityCharges					Charges;
+	local X2AbilityCost_Charges				ChargeCost;
+	local X2AbilityToHitCalc_StandardAim	StandardAim;
+	
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'RM_JulianBanish');
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
 	Template.bFeatureInStartingSquadUnlock = true;
-	//Template.bDontDisplayInAbilitySummary = true;
-    Template.AdditionalAbilities.AddItem('SoulReaper');
-	Template.AdditionalAbilities.AddItem('SoulHarvester');
+	//  require 2 ammo to be present so that multiple shots will be taken - otherwise it's a waste
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 2;
+	AmmoCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	//  actually charge 1 ammo for this shot. the 2nd shot will charge the extra ammo.
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+
+	Charges = new class'X2AbilityCharges';
+	Charges.InitialCharges = 1;
+	Template.AbilityCharges = Charges;
+
+	ChargeCost = new class'X2AbilityCost_Charges';
+	ChargeCost.NumCharges = 1;
+	Template.AbilityCosts.AddItem(ChargeCost);
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bAllowCrit = false;
+	StandardAim.BuiltInHitMod = default.BanishFirstShotAimMod;
+	Template.AbilityToHitCalc = StandardAim;
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AssociatedPassives.AddItem('HoloTargeting');
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.WEAPONMOD_PRIORITY;
+	Template.AbilitySourceName = 'eAbilitySource_WeaponMod';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	//Template.AbilityConfirmSound = "TacticalUI_ActivateAbility"; // DEPRECATED: Use X2AbilityTemplate's PerObjectConfig in DefaultGameCore.ini
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+	Template.SuperConcealmentLoss = 0;
+
+	Template.AdditionalAbilities.AddItem('RM_JulianBanishContinue');
+	Template.PostActivationEvents.AddItem('RM_JulianBanishContinue');
+
+	//	this ability will always break concealment at the end and we don't want to roll on it
+	Template.ConcealmentRule = eConceal_Always;
+	Template.SuperConcealmentLoss = 0;
+	Template.LostSpawnIncreasePerUse = class'X2AbilityTemplateManager'.default.StandardShotLostSpawnIncreasePerUse;
+//BEGIN AUTOGENERATED CODE: Template Overrides 'SoulReaper'
+	Template.bFrameEvenWhenUnitIsHidden = true;
+	Template.IconImage = "img:///UILibrary_XPACK_Common.PerkIcons.UIPerk_soulreaper";
+	Template.ActivationSpeech = 'Banish';
+//END AUTOGENERATED CODE: Template Overrides 'SoulReaper'
+
 	return Template;
 }
 
+static function X2AbilityTemplate RM_BanishContinue()
+{
+	local X2AbilityTemplate					Template;
+	local X2AbilityCost_Ammo				AmmoCost;
+	local X2AbilityTrigger_EventListener    Trigger;
+	local X2AbilityToHitCalc_StandardAim	StandardAim;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'RM_JulianBanishContinue');
+
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+
+	Template.bDontDisplayInAbilitySummary = true;
+	Template.bDisplayInUITacticalText = false;
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bAllowCrit = false;
+	StandardAim.BuiltInHitMod = default.BanishSubsequentShotsAimMod;
+	Template.AbilityToHitCalc = StandardAim;
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AssociatedPassives.AddItem('HoloTargeting');
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
+
+	Trigger = new class'X2AbilityTrigger_EventListener';
+	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
+	Trigger.ListenerData.EventID = 'RM_JulianBanishContinue';
+	Trigger.ListenerData.Filter = eFilter_Unit;
+	Trigger.ListenerData.EventFn = JulianBanishListener;
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.MergeVisualizationFn = SequentialShot_MergeVisualization;
+	Template.SuperConcealmentLoss = 0;
+
+	Template.PostActivationEvents.AddItem('RM_JulianBanishContinue');
+	Template.bShowActivation = true;
+
+	//	this ability will always break concealment at the end and we don't want to roll on it
+	Template.ConcealmentRule = eConceal_Always;
+	Template.SuperConcealmentLoss = 0;
+	Template.LostSpawnIncreasePerUse = class'X2AbilityTemplateManager'.default.StandardShotLostSpawnIncreasePerUse;
+//BEGIN AUTOGENERATED CODE: Template Overrides 'SoulReaperContinue'
+	Template.bFrameEvenWhenUnitIsHidden = true;
+	Template.IconImage = "img:///UILibrary_XPACK_Common.PerkIcons.UIPerk_soulreaper";
+//END AUTOGENERATED CODE: Template Overrides 'SoulReaperContinue'
+
+	return Template;
+}
+
+
+//listener for mag dump so we can keep going
+static function EventListenerReturn JulianBanishListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID, Object CallbackData)
+{
+	local XComGameStateHistory History;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Unit SourceUnit, TargetUnit;
+	local array<StateObjectReference> PossibleTargets;
+	local StateObjectReference BestTargetRef;
+	local int BestTargetHP;
+	local int i;
+	//local bool bAbilityContinues;
+	local XComGameState_Ability AbilityState;
+	local StateObjectReference AbilityRef;
+
+	AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
+		History = `XCOMHISTORY;
+	//AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(AbilityContext.InputContext.AbilityRef.ObjectID));
+	AbilityState = XComGameState_Ability(CallbackData);
+	if (AbilityContext != none && AbilityContext.InterruptionStatus != eInterruptionStatus_Interrupt)
+	{
+		SourceUnit = XComGameState_Unit(EventSource);
+		TargetUnit = XComGameState_Unit(GameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
+	
+		AbilityRef = SourceUnit.FindAbility('RM_JulianBanish');
+
+		if(AbilityRef.ObjectID == 0){
+			return ELR_NoInterrupt;
+		}
+
+		//AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(AbilityRef.ObjectID));
+
+		if (AbilityState == None){
+			return ELR_NoInterrupt;
+		}
+		if (TargetUnit.IsAlive())
+		{
+			AbilityState.AbilityTriggerAgainstSingleTarget(AbilityContext.InputContext.PrimaryTarget, false);
+		}
+		else 
+		{
+
+			//	find all possible new targets and select one with the highest HP to fire against
+			class'X2TacticalVisibilityHelpers'.static.GetAllVisibleEnemyUnitsForUnit(SourceUnit.ObjectID, PossibleTargets, AbilityState.GetMyTemplate().AbilityTargetConditions);
+			
+				BestTargetHP = -1;
+				for (i = 0; i < PossibleTargets.Length; ++i)
+				{
+					TargetUnit = XComGameState_Unit(History.GetGameStateForObjectID(PossibleTargets[i].ObjectID));
+					if (TargetUnit.GetCurrentStat(eStat_HP) > BestTargetHP)
+					{
+						BestTargetHP = TargetUnit.GetCurrentStat(eStat_HP);
+						BestTargetRef = PossibleTargets[i];
+					}
+				}
+				if (BestTargetRef.ObjectID > 0)
+				{
+					AbilityState.AbilityTriggerAgainstSingleTarget(BestTargetRef, false);
+				}
+			
+		}
+	}
+	return ELR_NoInterrupt;
+}
 
 // Lead The Target - Active: Queue a shot on a target that will be taken on the enemy's turn with an increased chance to hit. Does not count as reaction fire.
 static function X2AbilityTemplate RM_LeadTheTarget()
