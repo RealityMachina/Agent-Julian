@@ -30,7 +30,7 @@ static function X2AbilityTemplate JulianReturnFire()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_JulianReturnFire                   FireEffect;
+	local X2Effect_ReturnFire                   FireEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'JulianReturnFire');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_returnfire";
@@ -47,14 +47,16 @@ static function X2AbilityTemplate JulianReturnFire()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	FireEffect = new class'X2Effect_JulianReturnFire';
+	FireEffect = new class'X2Effect_ReturnFire';
+	FireEffect.MaxPointsPerTurn = 0; // infinte
+	FireEffect.EffectName = 'RM_JulianReturnFire';
 	FireEffect.BuildPersistentEffect(1, true, false, false, eWatchRule_UnitTurnBegin);
 	FireEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(FireEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
-
+	Template.AdditionalAbilities.AddItem('PistolReturnFire');
 	Template.bCrossClassEligible = false;       //  this can only work with pistols, which only sharpshooters have
 
 	return Template;
