@@ -8,6 +8,10 @@
 
 class X2DownloadableContentInfo_AgentJulian extends X2DownloadableContentInfo;
 
+
+var config(GameData_DialogueData) array<RuleTemplateData>  Rules;
+var config(GameData_DialogueData) array<DialogueResponseLine> Responses;
+
 /// <summary>
 /// This method is run if the player loads a saved game that was created prior to this DLC / Mod being installed, and allows the 
 /// DLC / Mod to perform custom processing in response. This will only be called once the first time a player loads a save that was
@@ -113,6 +117,26 @@ static event OnPostTemplatesCreated()
 {
 	AlterSquadArrays();
 	AlterAbilitiesForHello();
+	AlterDialogue();
+}
+
+static function AlterDialogue()
+{
+	local XComGameState_DialogueManager DialogueClass;
+	local int i;
+
+	DialogueClass = XComGameState_DialogueManager(class'Engine'.static.FindClassDefaultObject("XComGame.XComGameState_DialogueManager"));
+
+	for(i = 0; i < default.Rules.Length; i++)
+	{
+		DialogueClass.Rules.AddItem(default.Rules[i]);
+	}
+
+	for(i = 0; i < default.Responses.Length; i++)
+	{
+		DialogueClass.Responses.AddItem(default.Responses[i]);
+	}	
+
 }
 
 static function AlterAbilitiesForHello()

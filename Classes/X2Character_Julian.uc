@@ -29,7 +29,7 @@ static function X2CharacterTemplate CreateJulianTemplate()
 	CharTemplate.Abilities.AddItem('RobotImmunities');
 
 	//CharTemplate.DefaultAppearance.nmVoiceSet.AddItem('AndroidFemale');
-	CharTemplate.DefaultAppearance.nmVoice = 'AndroidMale';
+	CharTemplate.DefaultAppearance.nmVoice = 'RM_XComJulian'; //'AndroidMale';
 	//`log("JULIAN AGENT: We are " $ CharTemplate.DataName);
 	return CharTemplate;
 }
